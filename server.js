@@ -1658,10 +1658,133 @@ let buyPrice = 0.5; // السعر الافتراضي
 
 const PORT = process.env.PORT || 1010;
 const server = http.createServer(async (req, res) => {
+  // Ping endpoint للمراقبة الخارجية
+  if (req.method === "GET" && req.url === "/ping") {
+    res.writeHead(200, { 
+      "Content-Type": "text/plain",
+      "Cache-Control": "no-cache"
+    });
+    res.end("pong");
+    return;
+  }
+
   // Health check endpoint للتوافق مع Render
   if (req.method === "GET" && req.url === "/health") {
-    res.writeHead(200, { "Content-Type": "application/json" });
-    res.end(JSON.stringify({ status: "OK", timestamp: new Date().toISOString() }));
+    const uptime = process.uptime();
+    const hours = Math.floor(uptime / 3600);
+    const minutes = Math.floor((uptime % 3600) / 60);
+    const seconds = Math.floor(uptime % 60);
+    
+    const healthData = {
+      status: "OK",
+      timestamp: new Date().toISOString(),
+      uptime: `${hours}h ${minutes}m ${seconds}s`,
+      uptimeSeconds: Math.floor(uptime),
+      trackedTokens: Object.keys(trackedTokens).length,
+      memoryUsage: process.memoryUsage(),
+      platform: process.platform,
+      nodeVersion: process.version,
+      pid: process.pid,
+      keepAlive: {
+        attempts: keepAliveAttempts,
+        successes: keepAliveSuccesses,
+        successRate: keepAliveAttempts > 0 ? `${((keepAliveSuccesses / keepAliveAttempts) * 100).toFixed(1)}%` : '0%',
+        lastPing: lastKeepAlivePing ? lastKeepAlivePing.toISOString() : null
+      }
+    };
+    
+    res.writeHead(200, { 
+      "Content-Type": "application/json",
+      "Cache-Control": "no-cache"
+    });
+    res.end(JSON.stringify(healthData, null, 2));
+    return;
+  }
+
+  // Status endpoint لمراقبة حالة البوت
+  if (req.method === "GET" && req.url === "/status") {
+    const uptime = process.uptime();
+    const hours = Math.floor(uptime / 3600);
+    const minutes = Math.floor((uptime % 3600) / 60);
+    const seconds = Math.floor(uptime % 60);
+    
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+    res.end(`
+      <!DOCTYPE html>
+      <html lang="ar">
+      <head>
+        <title>حالة السيرفر</title>
+        <meta http-equiv="refresh" content="30">
+        <style>
+          body { font-family: Tahoma, Arial, sans-serif; background: #f5f6fa; margin: 0; padding: 20px; direction: rtl; }
+          .container { max-width: 800px; margin: 0 auto; background: white; border-radius: 10px; padding: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+          .status-ok { color: #4CAF50; font-weight: bold; }
+          .stat-item { margin: 10px 0; padding: 10px; background: #f8f9fa; border-radius: 5px; }
+          .stat-label { font-weight: bold; color: #333; }
+          .stat-value { color: #0078D7; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <h1 style="text-align: center; color: #0078D7;">📊 حالة السيرفر</h1>
+          
+          <div class="stat-item">
+            <span class="stat-label">🟢 الحالة:</span> 
+            <span class="status-ok">يعمل بنجاح</span>
+          </div>
+          
+          <div class="stat-item">
+            <span class="stat-label">⏰ وقت التشغيل:</span> 
+            <span class="stat-value">${hours}h ${minutes}m ${seconds}s</span>
+          </div>
+          
+          <div class="stat-item">
+            <span class="stat-label">📈 التوكنات المراقبة:</span> 
+            <span class="stat-value">${Object.keys(trackedTokens).length}</span>
+          </div>
+          
+          <div class="stat-item">
+            <span class="stat-label">🕒 آخر تحديث:</span> 
+            <span class="stat-value">${new Date().toLocaleString('ar-SA')}</span>
+          </div>
+          
+          <div class="stat-item">
+            <span class="stat-label">💾 استخدام الذاكرة:</span> 
+            <span class="stat-value">${Math.round(process.memoryUsage().heapUsed / 1024 / 1024)} MB</span>
+          </div>
+          
+          <div class="stat-item">
+            <span class="stat-label">🔄 Keep-Alive محاولات:</span> 
+            <span class="stat-value">${keepAliveAttempts}</span>
+          </div>
+          
+          <div class="stat-item">
+            <span class="stat-label">✅ Keep-Alive نجح:</span> 
+            <span class="stat-value">${keepAliveSuccesses}</span>
+          </div>
+          
+          <div class="stat-item">
+            <span class="stat-label">📊 معدل النجاح:</span> 
+            <span class="stat-value">${keepAliveAttempts > 0 ? ((keepAliveSuccesses / keepAliveAttempts) * 100).toFixed(1) + '%' : '0%'}</span>
+          </div>
+          
+          <div class="stat-item">
+            <span class="stat-label">⏰ آخر Keep-Alive:</span> 
+            <span class="stat-value">${lastKeepAlivePing ? lastKeepAlivePing.toLocaleString('ar-SA') : 'لم يتم بعد'}</span>
+          </div>
+          
+          <div style="text-align: center; margin-top: 30px;">
+            <a href="/" style="background: #0078D7; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold;">🏠 الصفحة الرئيسية</a>
+            <a href="/track_token" style="background: #4CAF50; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 0 10px;">📊 متابعة التوكنات</a>
+          </div>
+          
+          <div style="text-align: center; margin-top: 20px; color: #666; font-size: 14px;">
+            🔄 سيتم تحديث هذه الصفحة تلقائياً كل 30 ثانية
+          </div>
+        </div>
+      </body>
+      </html>
+    `);
     return;
   }
 
@@ -1673,6 +1796,8 @@ const server = http.createServer(async (req, res) => {
         <h1 style='color: #0078D7;'>🚀 البوت يعمل بنجاح!</h1>
         <p style='font-size: 1.2em; color: #333;'>الوقت الحالي: ${new Date().toLocaleString('ar-SA')}</p>
         <p><a href="/track_token" style='color: #0078D7; text-decoration: none;'>📊 متابعة التوكنات</a></p>
+        <p><a href="/status" style='color: #4CAF50; text-decoration: none;'>📈 حالة السيرفر</a></p>
+        <p><a href="/health" style='color: #FF9800; text-decoration: none;'>🔍 Health Check (JSON)</a></p>
       </div>
     `);
     return;
@@ -2589,6 +2714,58 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
+// متغير لتتبع آخر keep-alive ping
+let lastKeepAlivePing = null;
+let keepAliveAttempts = 0;
+let keepAliveSuccesses = 0;
+
+// دالة Keep-Alive لمنع Render من النوم
+function keepAlive() {
+  // استخدام رابط Render الخاص بك مباشرة أو متغير البيئة
+  const url = process.env.RENDER_EXTERNAL_URL || process.env.RENDER_SERVICE_URL || `https://cdcdcd.onrender.com`;
+  
+  console.log(`🔄 Sending keep-alive ping #${++keepAliveAttempts} to: ${url}/health`);
+  
+  const request = url.startsWith('https') ? https : http;
+  
+  const options = {
+    hostname: url.replace(/^https?:\/\//, ''),
+    path: '/health',
+    method: 'GET',
+    headers: {
+      'User-Agent': 'KeepAlive/1.0',
+      'X-Keep-Alive': 'true'
+    }
+  };
+
+  const req = request.request(options, (res) => {
+    keepAliveSuccesses++;
+    lastKeepAlivePing = new Date();
+    console.log(`✅ Keep-alive ping #${keepAliveAttempts} successful: ${res.statusCode} (Success rate: ${keepAliveSuccesses}/${keepAliveAttempts})`);
+  });
+
+  req.on('error', (error) => {
+    console.log(`❌ Keep-alive ping #${keepAliveAttempts} failed: ${error.message} (Success rate: ${keepAliveSuccesses}/${keepAliveAttempts})`);
+  });
+
+  req.setTimeout(30000, () => {
+    console.log(`⏰ Keep-alive ping #${keepAliveAttempts} timeout (Success rate: ${keepAliveSuccesses}/${keepAliveAttempts})`);
+    req.destroy();
+  });
+
+  req.end();
+}
+
+// بدء Keep-Alive كل 10 دقائق لمنع النوم
+function startKeepAlive() {
+  // إرسال ping فوري بعد 30 ثانية من بدء السيرفر
+  setTimeout(() => {
+    keepAlive();
+    // ثم كل 10 دقائق
+    setInterval(keepAlive, 10 * 60 * 1000); // 10 دقائق
+  }, 30000); // 30 ثانية
+}
+
 server.listen(PORT, async () => {
   console.log(`🌐 Server running on port ${PORT}`);
   console.log(`🔗 Token tracking link: http://localhost:${PORT}/track_token`);
@@ -2596,6 +2773,10 @@ server.listen(PORT, async () => {
   // تفعيل الحذف التلقائي للتوكنات الخطيرة والتحذيرية كل ساعة
   startAutoDeletion();
   console.log('✅ Automatic deletion enabled every hour for dangerous and warning tokens')
+  
+  // بدء Keep-Alive لمنع Render من النوم
+  startKeepAlive();
+  console.log('✅ Keep-alive mechanism started - Server will stay awake 24/7');
   
   // بدء إعادة فحص التكوينات القديمة في الخلفية
   setTimeout(async () => {
