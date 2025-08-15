@@ -8,15 +8,20 @@ const https = require("https");
 const { performance } = require('perf_hooks');
 
 /*
- * تحديث: نظام مراقبة الأسعار المحسن
+ * تحديث: نظام مراقبة الأسعار المحسن مع نظام فحص rugcheck متطور
  * - تم حذف استخدام Puppeteer نهائياً لتحسين الأداء والسرعة
  * - استخدام APIs مباشرة لجلب الأسعار (DexScreener + CoinGecko)
- * - فحص rugcheck.xyz للتحقق من أمان التوكنات
+ * - نظام فحص rugcheck متطور باستخدام rugcheck_content_extractor.js
+ * - تصنيف التوكنات بناءً على النقاط من 100 فقط:
+ *   • 0-9 نقطة: آمن جداً ✅
+ *   • 10-20 نقطة: آمن ✅ 
+ *   • 21-34 نقطة: تحذيري ⚠️
+ *   • 35+ نقطة: خطر 🔴
  * - الحذف التلقائي للتوكنات الخطيرة والتحذيرية
  * - يتم حذف التوكنات التي تحمل حالة DANGER أو WARNING فوراً عند اكتشافها
  * - يتم حذف التوكنات ذات السيولة المنخفضة فوراً 
  * - التنظيف التلقائي يعمل كل دقيقة للتأكد من عدم وجود توكنات خطيرة
- * - نظام أسرع وأكثر استقراراً
+ * - نظام أسرع وأكثر استقراراً ودقة
  */
 
 // قائمة التوكنات المراقبة
@@ -256,7 +261,6 @@ function saveTrackedTokens() {
         lastPrice: t.lastPrice,
         maxIncrease: t.maxIncrease,
         reached50: t.reached50,
-        price50Achieved: t.price50Achieved, // حفظ السعر الذي تم تحقيق 50% عنده
         stopped: t.stopped,
         rugcheckStatus: t.rugcheckStatus, // إضافة حفظ حالة rugcheck
         lowLiquidity: t.lowLiquidity, // إضافة حفظ حالة السيولة
@@ -305,7 +309,6 @@ function loadTrackedTokens() {
           // خصائص جديدة لتتبع أعلى سعر ونسبة الارتفاع
           highestPrice: savedToken.highestPrice || null,
           maxRisePercentage: savedToken.maxRisePercentage || 0,
-          price50Achieved: savedToken.price50Achieved || null, // السعر الذي تم تحقيق 50% عنده
           priceHistoryEvery20s: savedToken.priceHistoryEvery20s || [],
           lastPriceUpdate20s: savedToken.lastPriceUpdate20s ? new Date(savedToken.lastPriceUpdate20s) : null
         };
@@ -351,30 +354,70 @@ function loadTrackedTokens() {
   }
 }
 
-// التحقق من حالة التوكن على rugcheck.xyz بطريقة مبسطة (بدون puppeteer)
+// التحقق من حالة التوكن باستخدام rugcheck_content_extractor.js
 async function checkTokenSafety(token) {
-  console.log(`[${token}] 🔍 فحص التوكن على rugcheck.xyz...`);
+  console.log(`[${token}] 🔍 فحص التوكن باستخدام rugcheck_content_extractor.js...`);
   
   try {
-    // أولاً: محاولة API مباشر
-    const apiResult = await checkTokenSafetyAPI(token);
-    if (apiResult !== 'UNKNOWN') {
-      console.log(`[${token}] ✅ تم الحصول على النتيجة من API: ${apiResult}`);
-      return apiResult;
-    }
+    // استخدام rugcheck_content_extractor.js
+    const RugcheckContentExtractor = require('./rugcheck_content_extractor');
+    const extractor = new RugcheckContentExtractor();
     
-    // ثانياً: محاولة HTML البسيط
-    const htmlResult = await checkTokenSafetySimple(token);
-    if (htmlResult !== 'UNKNOWN') {
-      console.log(`[${token}] ✅ تم الحصول على النتيجة من HTML: ${htmlResult}`);
-      return htmlResult;
-    }
+    // استخراج المحتوى المنسق
+    const formattedContent = await extractor.extractFormattedContent(token);
     
-    console.log(`[${token}] ⚠️ لم يتم العثور على نتيجة واضحة`);
-    return 'UNKNOWN';
+    // البحث عن النقاط في المحتوى المستخرج
+    const scoreMatch = formattedContent.match(/(\d+)\s*\/\s*100/);
+    
+    if (scoreMatch) {
+      const score = parseInt(scoreMatch[1]);
+      console.log(`[${token}] 📊 النقاط المستخرجة: ${score}/100`);
+      
+      // تصنيف التوكن حسب النقاط
+      let status;
+      if (score >= 10 && score <= 20) {
+        status = 'SAFE';
+        console.log(`[${token}] ✅ التوكن آمن - النقاط: ${score}/100`);
+      } else if (score > 20 && score < 35) {
+        status = 'WARNING';
+        console.log(`[${token}] ⚠️ التوكن تحذيري - النقاط: ${score}/100`);
+      } else if (score >= 35) {
+        status = 'DANGER';
+        console.log(`[${token}] 🔴 التوكن خطر - النقاط: ${score}/100`);
+      } else {
+        // أقل من 10 نقاط - نعتبره آمن جداً
+        status = 'SAFE';
+        console.log(`[${token}] ✅ التوكن آمن جداً - النقاط: ${score}/100`);
+      }
+      
+      return status;
+    } else {
+      console.log(`[${token}] ⚠️ لم يتم العثور على تقييم نقاط في المحتوى`);
+      
+      // الرجوع للطريقة القديمة كبديل
+      const apiResult = await checkTokenSafetyAPI(token);
+      if (apiResult !== 'UNKNOWN') {
+        console.log(`[${token}] ✅ نتيجة API البديل: ${apiResult}`);
+        return apiResult;
+      }
+      
+      return 'UNKNOWN';
+    }
     
   } catch (error) {
     console.error(`[${token}] ❌ خطأ في فحص التوكن: ${error.message}`);
+    
+    // الرجوع للطريقة القديمة في حالة الخطأ
+    try {
+      const apiResult = await checkTokenSafetyAPI(token);
+      if (apiResult !== 'UNKNOWN') {
+        console.log(`[${token}] ✅ نتيجة API البديل بعد الخطأ: ${apiResult}`);
+        return apiResult;
+      }
+    } catch (fallbackError) {
+      console.error(`[${token}] ❌ خطأ في API البديل أيضاً: ${fallbackError.message}`);
+    }
+    
     return 'UNKNOWN';
   }
 }
@@ -792,12 +835,10 @@ async function startAPITracking(token, startTime) {
           // إذا لم يصل بعد إلى 50% وحققها الآن، ثبّت reached50 على true
           if (!trackedTokens[token].reached50 && increase >= 50) {
             trackedTokens[token].reached50 = true;
-            trackedTokens[token].price50Achieved = currentPrice; // حفظ السعر الذي تم تحقيق 50% عنده
-            saveTrackedTokens(); // حفظ فوري عند تحقيق 50%
-            console.log(`[${token}] 🚀 وصل إلى 50%! الارتفاع: ${increase.toFixed(2)}% - السعر: $${formatPrice(currentPrice)}`);
+            console.log(`[${token}] 🚀 وصل إلى 50%! الارتفاع: ${increase.toFixed(2)}%`);
             
             // التحقق من حالة rugcheck - إرسال أمر الشراء فقط للتوكنات الآمنة
-            if (trackedTokens[token].rugcheckStatus === 'GOOD') {
+            if (trackedTokens[token].rugcheckStatus === 'SAFE') {
               console.log(`[${token}] ✅ شرط الـ 50% محقق + التوكن آمن - إرسال أمر الشراء`);
               
               // التحقق من عدم الإرسال المسبق
@@ -887,7 +928,6 @@ async function startTrackingToken(token, rugcheckStatus = null, solValue = null)
     lastPrice: null,
     maxIncrease: 0,
     reached50: false,
-    price50Achieved: null, // السعر الذي تم تحقيق 50% عنده
     stopped: false,
     rugcheckStatus: rugcheckStatus, // حالة التحقق من rugcheck.xyz
     lowLiquidity: null, // حالة السيولة: true = منخفضة، false = طبيعية، null = غير محققة
@@ -1170,7 +1210,7 @@ if (fs.existsSync("session.txt")) {
               });
               
               return; // عدم إرسال التوكن إذا كان تحذير
-            } else if (tokenSafety === 'GOOD') {
+            } else if (tokenSafety === 'SAFE') {
               console.log(`[${token}] ✅ التوكن آمن على rugcheck.xyz`);
             } else {
               // إذا كان UNKNOWN أو أي حالة أخرى
@@ -1191,8 +1231,8 @@ if (fs.existsSync("session.txt")) {
             fs.writeFileSync('last_token.txt', token, 'utf8');
 
             // بدء مراقبة التوكن أولاً بدلاً من الإرسال الفوري
-            // سيتم إرسال أمر الشراء والتوكن فقط عند تحقق الـ 50% إذا كان التوكن آمن (GOOD)
-            if (tokenSafety === 'GOOD') {
+            // سيتم إرسال أمر الشراء والتوكن فقط عند تحقق الـ 50% إذا كان التوكن آمن (SAFE)
+            if (tokenSafety === 'SAFE') {
               console.log(`[${token}] 🔄 بدء مراقبة التوكن الآمن لانتظار تحقق الـ 50%...`);
               
               // بدء مراقبة التوكن (مع معالجة الأخطاء)
@@ -1546,86 +1586,52 @@ async function checkAllTokensLiquidity() {
 }
 
 // فحص rugcheck بطريقة مبسطة
+// فحص rugcheck باستخدام rugcheck_content_extractor.js
 async function checkRugcheckSimple(token) {
-  return new Promise((resolve) => {
-    try {
-      const options = {
-        hostname: 'rugcheck.xyz',
-        port: 443,
-        path: `/tokens/${token}`,
-        method: 'GET',
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-          'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-          'Accept-Language': 'en-US,en;q=0.5',
-          'Accept-Encoding': 'gzip, deflate, br',
-          'DNT': '1',
-          'Connection': 'keep-alive',
-          'Upgrade-Insecure-Requests': '1',
-        }
-      };
-
-      const req = https.request(options, (res) => {
-        let data = '';
-        
-        // التعامل مع الضغط
-        let stream = res;
-        if (res.headers['content-encoding'] === 'gzip') {
-          const zlib = require('zlib');
-          stream = res.pipe(zlib.createGunzip());
-        } else if (res.headers['content-encoding'] === 'deflate') {
-          const zlib = require('zlib');
-          stream = res.pipe(zlib.createInflate());
-        }
-        
-        stream.on('data', (chunk) => {
-          data += chunk;
-        });
-        
-        stream.on('end', () => {
-          try {
-            // البحث عن المؤشرات في النص
-            const lowerData = data.toLowerCase();
-            
-            if (lowerData.includes('good') || lowerData.includes('safe') || lowerData.includes('✓')) {
-              console.log(`[${token}] ✅ rugcheck: GOOD`);
-              resolve('GOOD');
-            } else if (lowerData.includes('danger') || lowerData.includes('risk') || lowerData.includes('warning')) {
-              console.log(`[${token}] ⚠️ rugcheck: DANGER/WARNING`);
-              resolve('DANGER');
-            } else {
-              console.log(`[${token}] ❓ rugcheck: UNKNOWN`);
-              resolve('UNKNOWN');
-            }
-          } catch (parseError) {
-            console.log(`[${token}] خطأ في تحليل rugcheck: ${parseError.message}`);
-            resolve('UNKNOWN');
-          }
-        });
-        
-        stream.on('error', (error) => {
-          console.log(`[${token}] خطأ في stream rugcheck: ${error.message}`);
-          resolve('UNKNOWN');
-        });
-      });
-
-      req.on('error', (error) => {
-        console.log(`[${token}] خطأ في طلب rugcheck: ${error.message}`);
-        resolve('UNKNOWN');
-      });
-
-      req.setTimeout(15000, () => {
-        console.log(`[${token}] انتهت مهلة rugcheck`);
-        req.abort();
-        resolve('UNKNOWN');
-      });
-
-      req.end();
-    } catch (error) {
-      console.log(`[${token}] خطأ عام في rugcheck: ${error.message}`);
-      resolve('UNKNOWN');
+  try {
+    console.log(`[${token}] 🔍 فحص rugcheck باستخدام content extractor...`);
+    
+    // استخدام rugcheck_content_extractor.js
+    const RugcheckContentExtractor = require('./rugcheck_content_extractor');
+    const extractor = new RugcheckContentExtractor();
+    
+    // استخراج المحتوى المنسق
+    const formattedContent = await extractor.extractFormattedContent(token);
+    
+    // البحث عن النقاط في المحتوى المستخرج
+    const scoreMatch = formattedContent.match(/(\d+)\s*\/\s*100/);
+    
+    if (scoreMatch) {
+      const score = parseInt(scoreMatch[1]);
+      console.log(`[${token}] 📊 النقاط المستخرجة: ${score}/100`);
+      
+      // تصنيف التوكن حسب النقاط
+      let status;
+      if (score >= 10 && score <= 20) {
+        status = 'SAFE';
+        console.log(`[${token}] ✅ التوكن آمن - النقاط: ${score}/100`);
+      } else if (score > 20 && score < 35) {
+        status = 'WARNING';
+        console.log(`[${token}] ⚠️ التوكن تحذيري - النقاط: ${score}/100`);
+      } else if (score >= 35) {
+        status = 'DANGER';
+        console.log(`[${token}] 🔴 التوكن خطر - النقاط: ${score}/100`);
+      } else {
+        // أقل من 10 نقاط - نعتبره آمن جداً
+        status = 'SAFE';
+        console.log(`[${token}] ✅ التوكن آمن جداً - النقاط: ${score}/100`);
+      }
+      
+      return status;
+    } else {
+      console.log(`[${token}] ⚠️ لم يتم العثور على تقييم نقاط في المحتوى`);
+      return 'UNKNOWN';
     }
-  });
+    
+  } catch (error) {
+    console.error(`[${token}] ❌ خطأ في فحص rugcheck: ${error.message}`);
+    return 'UNKNOWN';
+  }
 }
 
 // فحص سيولة توكن واحد (مبسط)
@@ -1658,133 +1664,10 @@ let buyPrice = 0.5; // السعر الافتراضي
 
 const PORT = process.env.PORT || 1010;
 const server = http.createServer(async (req, res) => {
-  // Ping endpoint للمراقبة الخارجية
-  if (req.method === "GET" && req.url === "/ping") {
-    res.writeHead(200, { 
-      "Content-Type": "text/plain",
-      "Cache-Control": "no-cache"
-    });
-    res.end("pong");
-    return;
-  }
-
   // Health check endpoint للتوافق مع Render
   if (req.method === "GET" && req.url === "/health") {
-    const uptime = process.uptime();
-    const hours = Math.floor(uptime / 3600);
-    const minutes = Math.floor((uptime % 3600) / 60);
-    const seconds = Math.floor(uptime % 60);
-    
-    const healthData = {
-      status: "OK",
-      timestamp: new Date().toISOString(),
-      uptime: `${hours}h ${minutes}m ${seconds}s`,
-      uptimeSeconds: Math.floor(uptime),
-      trackedTokens: Object.keys(trackedTokens).length,
-      memoryUsage: process.memoryUsage(),
-      platform: process.platform,
-      nodeVersion: process.version,
-      pid: process.pid,
-      keepAlive: {
-        attempts: keepAliveAttempts,
-        successes: keepAliveSuccesses,
-        successRate: keepAliveAttempts > 0 ? `${((keepAliveSuccesses / keepAliveAttempts) * 100).toFixed(1)}%` : '0%',
-        lastPing: lastKeepAlivePing ? lastKeepAlivePing.toISOString() : null
-      }
-    };
-    
-    res.writeHead(200, { 
-      "Content-Type": "application/json",
-      "Cache-Control": "no-cache"
-    });
-    res.end(JSON.stringify(healthData, null, 2));
-    return;
-  }
-
-  // Status endpoint لمراقبة حالة البوت
-  if (req.method === "GET" && req.url === "/status") {
-    const uptime = process.uptime();
-    const hours = Math.floor(uptime / 3600);
-    const minutes = Math.floor((uptime % 3600) / 60);
-    const seconds = Math.floor(uptime % 60);
-    
-    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
-    res.end(`
-      <!DOCTYPE html>
-      <html lang="ar">
-      <head>
-        <title>حالة السيرفر</title>
-        <meta http-equiv="refresh" content="30">
-        <style>
-          body { font-family: Tahoma, Arial, sans-serif; background: #f5f6fa; margin: 0; padding: 20px; direction: rtl; }
-          .container { max-width: 800px; margin: 0 auto; background: white; border-radius: 10px; padding: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-          .status-ok { color: #4CAF50; font-weight: bold; }
-          .stat-item { margin: 10px 0; padding: 10px; background: #f8f9fa; border-radius: 5px; }
-          .stat-label { font-weight: bold; color: #333; }
-          .stat-value { color: #0078D7; }
-        </style>
-      </head>
-      <body>
-        <div class="container">
-          <h1 style="text-align: center; color: #0078D7;">📊 حالة السيرفر</h1>
-          
-          <div class="stat-item">
-            <span class="stat-label">🟢 الحالة:</span> 
-            <span class="status-ok">يعمل بنجاح</span>
-          </div>
-          
-          <div class="stat-item">
-            <span class="stat-label">⏰ وقت التشغيل:</span> 
-            <span class="stat-value">${hours}h ${minutes}m ${seconds}s</span>
-          </div>
-          
-          <div class="stat-item">
-            <span class="stat-label">📈 التوكنات المراقبة:</span> 
-            <span class="stat-value">${Object.keys(trackedTokens).length}</span>
-          </div>
-          
-          <div class="stat-item">
-            <span class="stat-label">🕒 آخر تحديث:</span> 
-            <span class="stat-value">${new Date().toLocaleString('ar-SA')}</span>
-          </div>
-          
-          <div class="stat-item">
-            <span class="stat-label">💾 استخدام الذاكرة:</span> 
-            <span class="stat-value">${Math.round(process.memoryUsage().heapUsed / 1024 / 1024)} MB</span>
-          </div>
-          
-          <div class="stat-item">
-            <span class="stat-label">🔄 Keep-Alive محاولات:</span> 
-            <span class="stat-value">${keepAliveAttempts}</span>
-          </div>
-          
-          <div class="stat-item">
-            <span class="stat-label">✅ Keep-Alive نجح:</span> 
-            <span class="stat-value">${keepAliveSuccesses}</span>
-          </div>
-          
-          <div class="stat-item">
-            <span class="stat-label">📊 معدل النجاح:</span> 
-            <span class="stat-value">${keepAliveAttempts > 0 ? ((keepAliveSuccesses / keepAliveAttempts) * 100).toFixed(1) + '%' : '0%'}</span>
-          </div>
-          
-          <div class="stat-item">
-            <span class="stat-label">⏰ آخر Keep-Alive:</span> 
-            <span class="stat-value">${lastKeepAlivePing ? lastKeepAlivePing.toLocaleString('ar-SA') : 'لم يتم بعد'}</span>
-          </div>
-          
-          <div style="text-align: center; margin-top: 30px;">
-            <a href="/" style="background: #0078D7; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold;">🏠 الصفحة الرئيسية</a>
-            <a href="/track_token" style="background: #4CAF50; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 0 10px;">📊 متابعة التوكنات</a>
-          </div>
-          
-          <div style="text-align: center; margin-top: 20px; color: #666; font-size: 14px;">
-            🔄 سيتم تحديث هذه الصفحة تلقائياً كل 30 ثانية
-          </div>
-        </div>
-      </body>
-      </html>
-    `);
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ status: "OK", timestamp: new Date().toISOString() }));
     return;
   }
 
@@ -1796,8 +1679,6 @@ const server = http.createServer(async (req, res) => {
         <h1 style='color: #0078D7;'>🚀 البوت يعمل بنجاح!</h1>
         <p style='font-size: 1.2em; color: #333;'>الوقت الحالي: ${new Date().toLocaleString('ar-SA')}</p>
         <p><a href="/track_token" style='color: #0078D7; text-decoration: none;'>📊 متابعة التوكنات</a></p>
-        <p><a href="/status" style='color: #4CAF50; text-decoration: none;'>📈 حالة السيرفر</a></p>
-        <p><a href="/health" style='color: #FF9800; text-decoration: none;'>🔍 Health Check (JSON)</a></p>
       </div>
     `);
     return;
@@ -2432,7 +2313,7 @@ const server = http.createServer(async (req, res) => {
                   </div>
                 </div>
                 <div class="token-row"><span class="token-label">🔗 عنوان التوكن:</span> <span style="font-family: monospace; font-size: 0.85em; color: #666; word-break: break-all;">${t.token}</span></div>
-                <div class="token-row"><span class="token-label">🛡️ حالة <a href="https://rugcheck.xyz/tokens/${t.token}" target="_blank" style="color: #2196F3; text-decoration: none; font-weight: bold;">rugcheck.xyz</a>:</span> <span style="color: ${t.rugcheckStatus === 'GOOD' ? '#4CAF50' : t.rugcheckStatus === 'DANGER' ? '#F44336' : t.rugcheckStatus === 'WARNING' ? '#FF9800' : '#666'}; font-weight: bold;">${t.rugcheckStatus === 'GOOD' ? '✅ آمن' : t.rugcheckStatus === 'DANGER' ? '⚠️ خطر' : t.rugcheckStatus === 'WARNING' ? '🔶 تحذير' : '❓ لم يتم التحقق'}</span></div>
+                <div class="token-row"><span class="token-label">🛡️ حالة <a href="https://rugcheck.xyz/tokens/${t.token}" target="_blank" style="color: #2196F3; text-decoration: none; font-weight: bold;">rugcheck.xyz</a>:</span> <span style="color: ${t.rugcheckStatus === 'SAFE' ? '#4CAF50' : t.rugcheckStatus === 'DANGER' ? '#F44336' : t.rugcheckStatus === 'WARNING' ? '#FF9800' : '#666'}; font-weight: bold;">${t.rugcheckStatus === 'SAFE' ? '✅ آمن' : t.rugcheckStatus === 'DANGER' ? '🔴 خطر' : t.rugcheckStatus === 'WARNING' ? '⚠️ تحذير' : '❓ لم يتم التحقق'}</span></div>
                 <div class="token-row"><span class="token-label">💧 السيولة:</span> <span style="color: ${t.lowLiquidity === true ? '#FF5722' : t.lowLiquidity === false ? '#4CAF50' : '#666'}; font-weight: bold;">${t.lowLiquidity === true ? '⚠️ منخفضة' : t.lowLiquidity === false ? '✅ طبيعية' : '❓ لم يتم التحقق'}</span></div>
                 <div class="token-row"><span class="token-label">� قيمة SOL:</span> <span style="color: #FF9800; font-weight: bold;">${t.solValue ? t.solValue.toFixed(2) + ' SOL' : '❓ غير محددة'}</span></div>
                 <div class="token-row"><span class="token-label">�🕐 مدة المراقبة:</span> ${duration}</div>
@@ -2441,7 +2322,7 @@ const server = http.createServer(async (req, res) => {
                 <div class="token-row"><span class="token-label">📊 التغيير:</span> ${percent}</div>
                 <div class="token-row"><span class="token-label">� أعلى نسبة ارتفاع:</span> <span style="color: #4CAF50; font-weight: bold;">${t.maxRisePercentage ? t.maxRisePercentage.toFixed(2) + '%' : '0%'}</span></div>
                 <div class="token-row"><span class="token-label">�📈 المقارنة:</span> ${priceComparison}</div>
-                <div class="token-row"><span class="token-label">🎯 حقق 50%:</span> ${t.reached50 ? (t.price50Achieved ? `✅ نعم (السعر: $${formatPrice(t.price50Achieved)})` : '✅ نعم') : '❌ لا'}</div>
+                <div class="token-row"><span class="token-label">🎯 حقق 50%:</span> ${t.reached50 ? '✅ نعم' : '❌ لا'}</div>
                 <div class="token-row"><span class="token-label">⏰ بدء المراقبة:</span> ${t.startTime ? t.startTime.toLocaleString('ar-EG') : 'غير محدد'}</div>
                 ${t.stopped ? '<div class="token-row"><span class="token-label">🛑 السبب:</span> ' + (t.lowLiquidity ? 'توقفت بسبب السيولة المنخفضة' : t.rugcheckStatus === 'DANGER' || t.rugcheckStatus === 'WARNING' ? 'توقفت بسبب حالة rugcheck' : 'توقفت لسبب غير معروف') + '</div>' : ''}
               </div>
@@ -2714,58 +2595,6 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
-// متغير لتتبع آخر keep-alive ping
-let lastKeepAlivePing = null;
-let keepAliveAttempts = 0;
-let keepAliveSuccesses = 0;
-
-// دالة Keep-Alive لمنع Render من النوم
-function keepAlive() {
-  // استخدام رابط Render الخاص بك مباشرة أو متغير البيئة
-  const url = process.env.RENDER_EXTERNAL_URL || process.env.RENDER_SERVICE_URL || `https://cdcdcd.onrender.com`;
-  
-  console.log(`🔄 Sending keep-alive ping #${++keepAliveAttempts} to: ${url}/health`);
-  
-  const request = url.startsWith('https') ? https : http;
-  
-  const options = {
-    hostname: url.replace(/^https?:\/\//, ''),
-    path: '/health',
-    method: 'GET',
-    headers: {
-      'User-Agent': 'KeepAlive/1.0',
-      'X-Keep-Alive': 'true'
-    }
-  };
-
-  const req = request.request(options, (res) => {
-    keepAliveSuccesses++;
-    lastKeepAlivePing = new Date();
-    console.log(`✅ Keep-alive ping #${keepAliveAttempts} successful: ${res.statusCode} (Success rate: ${keepAliveSuccesses}/${keepAliveAttempts})`);
-  });
-
-  req.on('error', (error) => {
-    console.log(`❌ Keep-alive ping #${keepAliveAttempts} failed: ${error.message} (Success rate: ${keepAliveSuccesses}/${keepAliveAttempts})`);
-  });
-
-  req.setTimeout(30000, () => {
-    console.log(`⏰ Keep-alive ping #${keepAliveAttempts} timeout (Success rate: ${keepAliveSuccesses}/${keepAliveAttempts})`);
-    req.destroy();
-  });
-
-  req.end();
-}
-
-// بدء Keep-Alive كل 10 دقائق لمنع النوم
-function startKeepAlive() {
-  // إرسال ping فوري بعد 30 ثانية من بدء السيرفر
-  setTimeout(() => {
-    keepAlive();
-    // ثم كل 10 دقائق
-    setInterval(keepAlive, 10 * 60 * 1000); // 10 دقائق
-  }, 30000); // 30 ثانية
-}
-
 server.listen(PORT, async () => {
   console.log(`🌐 Server running on port ${PORT}`);
   console.log(`🔗 Token tracking link: http://localhost:${PORT}/track_token`);
@@ -2773,10 +2602,6 @@ server.listen(PORT, async () => {
   // تفعيل الحذف التلقائي للتوكنات الخطيرة والتحذيرية كل ساعة
   startAutoDeletion();
   console.log('✅ Automatic deletion enabled every hour for dangerous and warning tokens')
-  
-  // بدء Keep-Alive لمنع Render من النوم
-  startKeepAlive();
-  console.log('✅ Keep-alive mechanism started - Server will stay awake 24/7');
   
   // بدء إعادة فحص التكوينات القديمة في الخلفية
   setTimeout(async () => {
