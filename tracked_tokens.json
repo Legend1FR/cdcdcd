@@ -1,0 +1,827 @@
+{
+  "HLfrHJUygVy3biessPSQE2qrjHTGaiUuaqQRWELCbonk": {
+    "token": "HLfrHJUygVy3biessPSQE2qrjHTGaiUuaqQRWELCbonk",
+    "name": "Im Not Useless",
+    "symbol": "INU",
+    "startTime": "2025-08-14T15:07:16.673Z",
+    "firstPrice": 0.00003223,
+    "lastPrice": 0.00001711,
+    "maxIncrease": 0,
+    "reached50": false,
+    "price50Achieved": null,
+    "stopped": false,
+    "rugcheckStatus": "GOOD",
+    "lowLiquidity": false,
+    "solValue": 90.92,
+    "previousHighPrice": null,
+    "currentHighPrice": null,
+    "lastRiseTime": null,
+    "rapidRiseAchieved": false,
+    "priceRiseHistory": [],
+    "highestPrice": 0.00001711,
+    "maxRisePercentage": 0,
+    "priceHistoryEvery20s": [
+      {
+        "price": 0.0000168,
+        "changePercent": 0.41841004184099,
+        "timestamp": "2025-08-15T00:31:34.154Z"
+      },
+      {
+        "price": 0.0000168,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:31:54.552Z"
+      },
+      {
+        "price": 0.0000168,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:32:15.067Z"
+      },
+      {
+        "price": 0.0000168,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:32:36.816Z"
+      },
+      {
+        "price": 0.0000168,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:32:57.757Z"
+      },
+      {
+        "price": 0.0000168,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:33:18.709Z"
+      },
+      {
+        "price": 0.0000168,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:33:39.504Z"
+      },
+      {
+        "price": 0.0000168,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:34:00.958Z"
+      },
+      {
+        "price": 0.0000168,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:34:21.945Z"
+      },
+      {
+        "price": 0.0000168,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:34:42.862Z"
+      },
+      {
+        "price": 0.0000168,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:35:05.194Z"
+      },
+      {
+        "price": 0.0000168,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:35:25.592Z"
+      },
+      {
+        "price": 0.0000168,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:35:46.962Z"
+      },
+      {
+        "price": 0.0000168,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:36:08.223Z"
+      },
+      {
+        "price": 0.0000168,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:36:28.955Z"
+      },
+      {
+        "price": 0.0000168,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:36:50.255Z"
+      },
+      {
+        "price": 0.00001711,
+        "changePercent": 1.8452380952381082,
+        "timestamp": "2025-08-15T00:37:11.633Z"
+      },
+      {
+        "price": 0.00001711,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:37:33.648Z"
+      },
+      {
+        "price": 0.00001711,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:37:54.710Z"
+      },
+      {
+        "price": 0.00001711,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:38:15.321Z"
+      },
+      {
+        "price": 0.00001711,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:38:36.510Z"
+      },
+      {
+        "price": 0.00001711,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:38:57.939Z"
+      },
+      {
+        "price": 0.00001711,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:39:18.109Z"
+      },
+      {
+        "price": 0.00001711,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:39:40.613Z"
+      },
+      {
+        "price": 0.00001711,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:40:01.712Z"
+      },
+      {
+        "price": 0.00001711,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:40:21.942Z"
+      },
+      {
+        "price": 0.00001711,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:40:42.578Z"
+      },
+      {
+        "price": 0.00001711,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:41:03.712Z"
+      },
+      {
+        "price": 0.00001711,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:41:23.872Z"
+      },
+      {
+        "price": 0.00001711,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:41:52.314Z"
+      },
+      {
+        "price": 0.00001711,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:42:13.193Z"
+      },
+      {
+        "price": 0.00001711,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:42:33.632Z"
+      },
+      {
+        "price": 0.00001711,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:42:54.342Z"
+      },
+      {
+        "price": 0.00001711,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:43:16.357Z"
+      },
+      {
+        "price": 0.00001711,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:43:37.762Z"
+      },
+      {
+        "price": 0.00001711,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:43:59.210Z"
+      },
+      {
+        "price": 0.00001711,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:44:19.450Z"
+      },
+      {
+        "price": 0.00001711,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:44:41.427Z"
+      },
+      {
+        "price": 0.00001711,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:45:03.017Z"
+      },
+      {
+        "price": 0.00001711,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:45:23.611Z"
+      },
+      {
+        "price": 0.00001711,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:45:44.406Z"
+      },
+      {
+        "price": 0.00001711,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:46:06.500Z"
+      },
+      {
+        "price": 0.00001711,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:46:26.952Z"
+      },
+      {
+        "price": 0.00001711,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:46:47.328Z"
+      },
+      {
+        "price": 0.00001711,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:47:08.699Z"
+      },
+      {
+        "price": 0.00001711,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:47:29.228Z"
+      },
+      {
+        "price": 0.00001711,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:47:49.384Z"
+      },
+      {
+        "price": 0.00001711,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:48:09.995Z"
+      },
+      {
+        "price": 0.00001711,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:48:30.329Z"
+      },
+      {
+        "price": 0.00001711,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:48:50.987Z"
+      }
+    ],
+    "lastPriceUpdate20s": "2025-08-15T00:48:50.987Z"
+  },
+  "G1DXVVmqJs8Ei79QbK41dpgk2WtXSGqLtx9of7o8BAGS": {
+    "token": "G1DXVVmqJs8Ei79QbK41dpgk2WtXSGqLtx9of7o8BAGS",
+    "name": "MrBeast FUND",
+    "symbol": "MRBEAST",
+    "startTime": "2025-08-14T22:21:57.063Z",
+    "firstPrice": 0.004866,
+    "lastPrice": 0.000736,
+    "maxIncrease": 0,
+    "reached50": false,
+    "price50Achieved": null,
+    "stopped": false,
+    "rugcheckStatus": "GOOD",
+    "lowLiquidity": false,
+    "solValue": 17.19,
+    "previousHighPrice": null,
+    "currentHighPrice": null,
+    "lastRiseTime": null,
+    "rapidRiseAchieved": false,
+    "priceRiseHistory": [],
+    "highestPrice": 0.0007994,
+    "maxRisePercentage": 0,
+    "priceHistoryEvery20s": [
+      {
+        "price": 0.0007062,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:31:32.743Z"
+      },
+      {
+        "price": 0.0006498,
+        "changePercent": -7.986406117247248,
+        "timestamp": "2025-08-15T00:31:54.059Z"
+      },
+      {
+        "price": 0.0006498,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:32:14.547Z"
+      },
+      {
+        "price": 0.0006901,
+        "changePercent": 6.201908279470616,
+        "timestamp": "2025-08-15T00:32:36.501Z"
+      },
+      {
+        "price": 0.0006872,
+        "changePercent": -0.4202289523257522,
+        "timestamp": "2025-08-15T00:32:57.640Z"
+      },
+      {
+        "price": 0.0006872,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:33:18.411Z"
+      },
+      {
+        "price": 0.0006538,
+        "changePercent": -4.8603026775320215,
+        "timestamp": "2025-08-15T00:33:39.240Z"
+      },
+      {
+        "price": 0.0006451,
+        "changePercent": -1.3306821657999297,
+        "timestamp": "2025-08-15T00:34:00.423Z"
+      },
+      {
+        "price": 0.0006451,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:34:21.711Z"
+      },
+      {
+        "price": 0.0006451,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:34:43.541Z"
+      },
+      {
+        "price": 0.0006953,
+        "changePercent": 7.7817392652302,
+        "timestamp": "2025-08-15T00:35:05.298Z"
+      },
+      {
+        "price": 0.0006953,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:35:25.711Z"
+      },
+      {
+        "price": 0.0006959,
+        "changePercent": 0.08629368617861444,
+        "timestamp": "2025-08-15T00:35:46.956Z"
+      },
+      {
+        "price": 0.0007029,
+        "changePercent": 1.0058916510993048,
+        "timestamp": "2025-08-15T00:36:08.237Z"
+      },
+      {
+        "price": 0.0007029,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:36:28.953Z"
+      },
+      {
+        "price": 0.0007225,
+        "changePercent": 2.7884478588704003,
+        "timestamp": "2025-08-15T00:36:49.622Z"
+      },
+      {
+        "price": 0.0007225,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:37:10.970Z"
+      },
+      {
+        "price": 0.0007251,
+        "changePercent": 0.3598615916954955,
+        "timestamp": "2025-08-15T00:37:34.000Z"
+      },
+      {
+        "price": 0.0007251,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:37:54.494Z"
+      },
+      {
+        "price": 0.0007512,
+        "changePercent": 3.5995035167563145,
+        "timestamp": "2025-08-15T00:38:15.826Z"
+      },
+      {
+        "price": 0.0007512,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:38:36.343Z"
+      },
+      {
+        "price": 0.0007385,
+        "changePercent": -1.6906283280085248,
+        "timestamp": "2025-08-15T00:38:57.524Z"
+      },
+      {
+        "price": 0.0007385,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:39:17.955Z"
+      },
+      {
+        "price": 0.0007188,
+        "changePercent": -2.667569397427216,
+        "timestamp": "2025-08-15T00:39:40.277Z"
+      },
+      {
+        "price": 0.0007679,
+        "changePercent": 6.830829159710622,
+        "timestamp": "2025-08-15T00:40:01.075Z"
+      },
+      {
+        "price": 0.0007679,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:40:22.040Z"
+      },
+      {
+        "price": 0.0007679,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:40:42.374Z"
+      },
+      {
+        "price": 0.0007436,
+        "changePercent": -3.164474540955853,
+        "timestamp": "2025-08-15T00:41:02.813Z"
+      },
+      {
+        "price": 0.000729,
+        "changePercent": -1.9634211941904143,
+        "timestamp": "2025-08-15T00:41:23.361Z"
+      },
+      {
+        "price": 0.000729,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:41:52.112Z"
+      },
+      {
+        "price": 0.0007692,
+        "changePercent": 5.51440329218107,
+        "timestamp": "2025-08-15T00:42:13.285Z"
+      },
+      {
+        "price": 0.0007692,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:42:33.693Z"
+      },
+      {
+        "price": 0.0007644,
+        "changePercent": -0.624024960998441,
+        "timestamp": "2025-08-15T00:42:55.272Z"
+      },
+      {
+        "price": 0.0007821,
+        "changePercent": 2.3155416012558794,
+        "timestamp": "2025-08-15T00:43:17.082Z"
+      },
+      {
+        "price": 0.0007821,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:43:38.202Z"
+      },
+      {
+        "price": 0.0007994,
+        "changePercent": 2.211993351233863,
+        "timestamp": "2025-08-15T00:43:58.952Z"
+      },
+      {
+        "price": 0.0007323,
+        "changePercent": -8.39379534650989,
+        "timestamp": "2025-08-15T00:44:19.618Z"
+      },
+      {
+        "price": 0.0007323,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:44:41.186Z"
+      },
+      {
+        "price": 0.0007418,
+        "changePercent": 1.2972825344804135,
+        "timestamp": "2025-08-15T00:45:03.011Z"
+      },
+      {
+        "price": 0.0007418,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:45:23.405Z"
+      },
+      {
+        "price": 0.0007272,
+        "changePercent": -1.9681854947425221,
+        "timestamp": "2025-08-15T00:45:44.140Z"
+      },
+      {
+        "price": 0.0007286,
+        "changePercent": 0.1925192519251972,
+        "timestamp": "2025-08-15T00:46:05.703Z"
+      },
+      {
+        "price": 0.0007286,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:46:26.451Z"
+      },
+      {
+        "price": 0.0007361,
+        "changePercent": 1.0293713972000975,
+        "timestamp": "2025-08-15T00:46:47.260Z"
+      },
+      {
+        "price": 0.0007361,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:47:07.774Z"
+      },
+      {
+        "price": 0.0007562,
+        "changePercent": 2.730607254449124,
+        "timestamp": "2025-08-15T00:47:28.446Z"
+      },
+      {
+        "price": 0.0007404,
+        "changePercent": -2.0893943401216544,
+        "timestamp": "2025-08-15T00:47:49.084Z"
+      },
+      {
+        "price": 0.0007404,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:48:09.444Z"
+      },
+      {
+        "price": 0.0007311,
+        "changePercent": -1.2560777957860556,
+        "timestamp": "2025-08-15T00:48:30.692Z"
+      },
+      {
+        "price": 0.000736,
+        "changePercent": 0.6702229517165854,
+        "timestamp": "2025-08-15T00:48:51.285Z"
+      }
+    ],
+    "lastPriceUpdate20s": "2025-08-15T00:48:51.285Z"
+  },
+  "5XjhHwMQKL3LQGf8SS1tUiYH6ABhc2GCXrYQJZiVWSTU": {
+    "token": "5XjhHwMQKL3LQGf8SS1tUiYH6ABhc2GCXrYQJZiVWSTU",
+    "name": "SOLANA IS GOOD",
+    "symbol": "SBULL",
+    "startTime": "2025-08-14T23:21:52.020Z",
+    "firstPrice": 0.00000415,
+    "lastPrice": 0.00000415,
+    "maxIncrease": 0,
+    "reached50": false,
+    "price50Achieved": null,
+    "stopped": false,
+    "rugcheckStatus": "GOOD",
+    "lowLiquidity": false,
+    "solValue": 10,
+    "previousHighPrice": null,
+    "currentHighPrice": null,
+    "lastRiseTime": null,
+    "rapidRiseAchieved": false,
+    "priceRiseHistory": [],
+    "highestPrice": 0.00000415,
+    "maxRisePercentage": 0,
+    "priceHistoryEvery20s": [
+      {
+        "price": 0.00000415,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:31:35.272Z"
+      },
+      {
+        "price": 0.00000415,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:31:57.207Z"
+      },
+      {
+        "price": 0.00000415,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:32:18.245Z"
+      },
+      {
+        "price": 0.00000415,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:32:38.698Z"
+      },
+      {
+        "price": 0.00000415,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:33:01.913Z"
+      },
+      {
+        "price": 0.00000415,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:33:22.951Z"
+      },
+      {
+        "price": 0.00000415,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:33:43.367Z"
+      },
+      {
+        "price": 0.00000415,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:34:03.607Z"
+      },
+      {
+        "price": 0.00000415,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:34:25.482Z"
+      },
+      {
+        "price": 0.00000415,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:34:46.573Z"
+      },
+      {
+        "price": 0.00000415,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:35:07.049Z"
+      },
+      {
+        "price": 0.00000415,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:35:28.041Z"
+      },
+      {
+        "price": 0.00000415,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:35:48.197Z"
+      },
+      {
+        "price": 0.00000415,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:36:09.189Z"
+      },
+      {
+        "price": 0.00000415,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:36:29.638Z"
+      },
+      {
+        "price": 0.00000415,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:36:50.096Z"
+      },
+      {
+        "price": 0.00000415,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:37:11.205Z"
+      },
+      {
+        "price": 0.00000415,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:37:33.974Z"
+      },
+      {
+        "price": 0.00000415,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:37:54.384Z"
+      },
+      {
+        "price": 0.00000415,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:38:15.223Z"
+      },
+      {
+        "price": 0.00000415,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:38:36.173Z"
+      },
+      {
+        "price": 0.00000415,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:38:57.735Z"
+      },
+      {
+        "price": 0.00000415,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:39:18.579Z"
+      },
+      {
+        "price": 0.00000415,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:39:40.017Z"
+      },
+      {
+        "price": 0.00000415,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:40:00.790Z"
+      },
+      {
+        "price": 0.00000415,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:40:21.472Z"
+      },
+      {
+        "price": 0.00000415,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:40:41.838Z"
+      },
+      {
+        "price": 0.00000415,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:41:02.504Z"
+      },
+      {
+        "price": 0.00000415,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:41:23.145Z"
+      },
+      {
+        "price": 0.00000415,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:41:52.576Z"
+      },
+      {
+        "price": 0.00000415,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:42:13.312Z"
+      },
+      {
+        "price": 0.00000415,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:42:33.696Z"
+      },
+      {
+        "price": 0.00000415,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:42:55.051Z"
+      },
+      {
+        "price": 0.00000415,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:43:16.360Z"
+      },
+      {
+        "price": 0.00000415,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:43:38.046Z"
+      },
+      {
+        "price": 0.00000415,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:43:58.857Z"
+      },
+      {
+        "price": 0.00000415,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:44:20.040Z"
+      },
+      {
+        "price": 0.00000415,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:44:41.187Z"
+      },
+      {
+        "price": 0.00000415,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:45:03.013Z"
+      },
+      {
+        "price": 0.00000415,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:45:23.524Z"
+      },
+      {
+        "price": 0.00000415,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:45:44.313Z"
+      },
+      {
+        "price": 0.00000415,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:46:05.646Z"
+      },
+      {
+        "price": 0.00000415,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:46:26.455Z"
+      },
+      {
+        "price": 0.00000415,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:46:47.721Z"
+      },
+      {
+        "price": 0.00000415,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:47:08.875Z"
+      },
+      {
+        "price": 0.00000415,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:47:29.338Z"
+      },
+      {
+        "price": 0.00000415,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:47:49.464Z"
+      },
+      {
+        "price": 0.00000415,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:48:11.048Z"
+      },
+      {
+        "price": 0.00000415,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:48:31.514Z"
+      },
+      {
+        "price": 0.00000415,
+        "changePercent": 0,
+        "timestamp": "2025-08-15T00:48:52.056Z"
+      }
+    ],
+    "lastPriceUpdate20s": "2025-08-15T00:48:52.056Z"
+  }
+}
